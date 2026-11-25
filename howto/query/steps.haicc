@@ -1,0 +1,26 @@
+# step: some structure to select from
+. crud/create swarms/swarm-1 '{"size":3,"owner":{"name":"ann"}}'
+# expect: "outcome":"created"
+. crud/create swarms/swarm-2 '{"size":1}'
+# expect: "outcome":"created"
+# step: every child
+. crud/read "swarms/*"
+# expect: "uri":["main","swarms/swarm-1"]
+# expect: "uri":["main","swarms/swarm-2"]
+# step: those whose document a filter holds for
+. crud/read "swarms/*[size>2]"
+# expect: [{"uri":["main","swarms/swarm-1"],"value":{"size":3,"owner":{"name":"ann"}},"children":[]}]
+. crud/read "swarms/*[owner/name='ann']"
+# expect: "uri":["main","swarms/swarm-1"]
+# step: a value inside a document
+. crud/read swarms/swarm-1/owner/name
+# expect: "ann"
+# step: the records of another layer: the requests done
+. crud/read "done/*" --flags layer=request
+# expect: "protocol":"crud","action":"create"
+# step: the selection removed
+. crud/delete "swarms/*[size<2]"
+# expect: "uri":["main","swarms/swarm-2"]
+# expect: "outcome":"deleted"
+. crud/read "swarms/*"
+# expect: [{"uri":["main","swarms/swarm-1"]

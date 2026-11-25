@@ -7,22 +7,7 @@ Nothing selected is an empty answer, not an error.
 
 ## Steps
 
-```sh
-# some structure to select from
-haicc . crud/create swarms/swarm-1 '{"size":3,"owner":{"name":"ann"}}'
-haicc . crud/create swarms/swarm-2 '{"size":1}'
-# every child
-haicc . crud/read "swarms/*"
-# those whose document a filter holds for
-haicc . crud/read "swarms/*[size>2]"
-haicc . crud/read "swarms/*[owner/name='ann']"
-# a value inside a document
-haicc . crud/read swarms/swarm-1/owner/name
-# the records of another layer: the requests done
-haicc . crud/read "done/*" --flags layer=request
-# the selection removed
-haicc . crud/delete "swarms/*[size<2]"
-```
+The script, [steps.haicc](steps.haicc): each line as typed after `haicc`, what it answers under it; run with `howto/run`, shown here at info extraction.
 
 ## Notes
 

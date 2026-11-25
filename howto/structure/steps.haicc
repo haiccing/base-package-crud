@@ -1,0 +1,21 @@
+# step: a node and its parent: swarms made empty, swarm-1 with its document
+. crud/create swarms/swarm-1 '{"size":3}'
+# expect: "uri":["main","swarms"],"value":{},"children":["swarm-1"],"outcome":"created"
+# expect: "value":{"size":3},"children":[],"outcome":"created"
+# step: again, with another value: there already, left as it is (no update)
+. crud/create swarms/swarm-1 '{"size":9}'
+# expect: "value":{"size":3},"children":[],"outcome":"there"
+# step: read back: the node, its document, its children's names
+. crud/read swarms
+# expect: "children":["swarm-1"]
+. crud/read swarms/swarm-1
+# expect: "value":{"size":3}
+# step: removed: a node with children only with recurse
+. crud/delete swarms
+# expect: error: swarms has children: not deleted
+. crud/delete swarms recurse
+# expect: "outcome":"deleted"
+# step: in another mrepo: the same, at its shortcut
+. boot/deploy host haiccing/base-component-haicc
+host crud/create swarms/swarm-1
+# expect: "outcome":"created"
